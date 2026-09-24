@@ -13,9 +13,6 @@ from app.db.database import Base, engine, BASE_DIR
 from app.security.auth import init_admin
 from app.api.routes import router
 
-Base.metadata.create_all(bind=engine)
-init_admin()
-
 ON_VERCEL = os.environ.get("VERCEL") == "1"
 
 
@@ -57,6 +54,17 @@ def _watch_posts():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # ★ 建表 + 初始化管理员，放在这里，避免 import 时就炸
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        print(f"[init] create_all 失败：{e}")
+
+    try:
+        init_admin()
+    except Exception as e:
+        print(f"[init] init_admin 失败：{e}")
+
     # ★ Vercel 上不启动 watcher
     if not ON_VERCEL and os.environ.get("BLOG_WATCH", "1") == "1":
         threading.Thread(target=_watch_posts, daemon=True).start()
@@ -83,15 +91,22 @@ async def referer_guard(request: Request, call_next):
     return await call_next(request)
 
 
-# 静态资源挂载
-app.mount("/css", StaticFiles(directory=os.path.join(BASE_DIR, "css")), name="css")
-app.mount("/js", StaticFiles(directory=os.path.join(BASE_DIR, "js")), name="js")
+# ★ 静态资源挂载：目录不存在就跳过，避免 StaticFiles 直接抛异常
+for _name in ("css", "js"):
+    _dir = os.path.join(BASE_DIR, _name)
+    if os.path.isdir(_dir):
+        app.mount(f"/{_name}", StaticFiles(directory=_dir), name=_name)
+    else:
+        print(f"[mount] 跳过 /{_name}，目录不存在：{_dir}")
 
-# ★ 本地才挂 /uploads（R2 模式不需要）
+# ★ 本地才挂 /uploads（R2 / 无附件模式不需要）
 if not ON_VERCEL:
-    from app.files.uploads import UPLOAD_DIR
-    os.makedirs(UPLOAD_DIR, exist_ok=True)
-    app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+    try:
+        from app.files.uploads import UPLOAD_DIR
+        os.makedirs(UPLOAD_DIR, exist_ok=True)
+        app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+    except Exception as e:
+        print(f"[mount] 跳过 /uploads：{e}")
 
 app.include_router(router)
 

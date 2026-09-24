@@ -2,7 +2,8 @@
     "buildCommand": "pip install -r requirements.txt",
     "functions": {
         "api/index.py": {
-            "maxDuration": 60
+            "maxDuration": 60,
+            "includeFiles": "{templates,css,js,posts}/**"
         }
     },
     "rewrites": [

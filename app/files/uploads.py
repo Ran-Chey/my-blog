@@ -1,48 +1,58 @@
 # 文件名：app/files/uploads.py
-# 文件上传相关：本地磁盘 or Cloudflare R2
+# 文件上传相关：本地磁盘 or S3 兼容存储
+# ★ boto3 懒加载：只有真正用 S3 时才 import
+# ★ os.makedirs 加 try/except：Vercel 只读文件系统不崩
 
 import os
 import uuid
 
-import boto3
-from botocore.config import Config
 from fastapi import HTTPException, UploadFile
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
 
-# ★ 判断用本地还是 R2
-R2_ACCOUNT_ID = os.environ.get("R2_ACCOUNT_ID")
-R2_ACCESS_KEY_ID = os.environ.get("R2_ACCESS_KEY_ID")
-R2_SECRET_ACCESS_KEY = os.environ.get("R2_SECRET_ACCESS_KEY")
-R2_BUCKET_NAME = os.environ.get("R2_BUCKET_NAME")
-R2_PUBLIC_URL = os.environ.get("R2_PUBLIC_URL")
+S3_ENDPOINT = os.environ.get("AWS_ENDPOINT_URL_S3", "")
+S3_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY_ID", "")
+S3_SECRET_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
+S3_BUCKET = os.environ.get("S3_BUCKET", "my-blog")
+S3_REGION = os.environ.get("AWS_REGION", "us-east-2")
+S3_PUBLIC_URL = os.environ.get("S3_PUBLIC_URL", "")
 
-USE_R2 = all([R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME, R2_PUBLIC_URL])
+USE_S3 = all([S3_ENDPOINT, S3_ACCESS_KEY, S3_SECRET_KEY, S3_BUCKET, S3_PUBLIC_URL])
 
-if not USE_R2:
-    os.makedirs(UPLOAD_DIR, exist_ok=True)
+# ★ Vercel 上 BASE_DIR 是只读的，makedirs 会抛 OSError
+#   用 try/except 包住，避免 import 时直接崩
+if not USE_S3:
+    try:
+        os.makedirs(UPLOAD_DIR, exist_ok=True)
+    except OSError:
+        pass
 
 ALLOWED_EXTENSIONS = {".pdf", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".txt", ".md"}
 MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB
 
 
-def _get_r2_client():
+def _get_s3_client():
+    # ★ 懒加载 boto3
+    import boto3
+    from botocore.config import Config
+
     return boto3.client(
         "s3",
-        endpoint_url=f"https://{R2_ACCOUNT_ID}.r2.cloudflarestorage.com",
-        aws_access_key_id=R2_ACCESS_KEY_ID,
-        aws_secret_access_key=R2_SECRET_ACCESS_KEY,
-        config=Config(signature_version="s3v4"),
-        region_name="auto",
+        endpoint_url=S3_ENDPOINT,
+        aws_access_key_id=S3_ACCESS_KEY,
+        aws_secret_access_key=S3_SECRET_KEY,
+        region_name=S3_REGION,
+        config=Config(
+            signature_version="s3v4",
+            s3={"addressing_style": "path"},
+            request_checksum_calculation="when_required",
+            response_checksum_validation="when_required",
+        ),
     )
 
 
 async def save_upload(file: UploadFile) -> dict:
-    """
-    接收 UploadFile，校验类型和大小，保存到本地或 R2。
-    返回 { url, name }。
-    """
     filename = file.filename or "unnamed"
     ext = os.path.splitext(filename)[1].lower()
     if ext not in ALLOWED_EXTENSIONS:
@@ -56,7 +66,6 @@ async def save_upload(file: UploadFile) -> dict:
     chunk_size = 1024 * 1024
     chunks = []
 
-    # 先读进内存（100MB 上限，可接受；想更省内存可以边读边传）
     while True:
         chunk = await file.read(chunk_size)
         if not chunk:
@@ -70,47 +79,45 @@ async def save_upload(file: UploadFile) -> dict:
         chunks.append(chunk)
     contents = b"".join(chunks)
 
-    if USE_R2:
-        # ★ 上传到 R2
+    if USE_S3:
         try:
-            client = _get_r2_client()
+            client = _get_s3_client()
             client.put_object(
-                Bucket=R2_BUCKET_NAME,
+                Bucket=S3_BUCKET,
                 Key=new_filename,
                 Body=contents,
                 ContentType=file.content_type or "application/octet-stream",
             )
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"R2 上传失败：{e}")
-        url = f"{R2_PUBLIC_URL.rstrip('/')}/{new_filename}"
+            raise HTTPException(status_code=500, detail=f"S3 上传失败：{e}")
+        url = f"{S3_PUBLIC_URL.rstrip('/')}/{new_filename}"
     else:
-        # ★ 本地磁盘
         file_path = os.path.join(UPLOAD_DIR, new_filename)
-        with open(file_path, "wb") as f:
-            f.write(contents)
+        try:
+            with open(file_path, "wb") as f:
+                f.write(contents)
+        except OSError as e:
+            raise HTTPException(status_code=500, detail=f"本地写入失败：{e}")
         url = f"/uploads/{new_filename}"
 
     return {"url": url, "name": filename}
 
 
 def delete_upload_by_url(url: str) -> None:
-    """根据 url 删文件（本地或 R2）。"""
     if not url:
         return
 
-    if USE_R2:
-        # R2 的 url 形如 {R2_PUBLIC_URL}/{filename}
-        prefix = R2_PUBLIC_URL.rstrip("/") + "/"
+    if USE_S3:
+        prefix = S3_PUBLIC_URL.rstrip("/") + "/"
         if not url.startswith(prefix):
             return
         key = url[len(prefix):]
         try:
-            client = _get_r2_client()
-            client.delete_object(Bucket=R2_BUCKET_NAME, Key=key)
+            client = _get_s3_client()
+            client.delete_object(Bucket=S3_BUCKET, Key=key)
         except Exception as e:
-            print(f"[uploads] R2 删除失败 {key}：{e}")
+            print(f"[uploads] S3 删除失败 {key}：{e}")
     else:
-        # 本地 /uploads/xxx
         if not url.startswith("/uploads/"):
             return
         fname = url[len("/uploads/"):]

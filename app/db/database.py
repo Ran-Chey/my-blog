@@ -5,23 +5,22 @@ import os
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.pool import NullPool
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# ★ 优先从环境变量读 DATABASE_URL（Vercel / Neon）
-#   没有则回退到本地 SQLite（本地开发）
+ON_VERCEL = os.environ.get("VERCEL") == "1"
+
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 if DATABASE_URL:
     # Neon / PostgreSQL
-    # Neon 的连接串可能带 channel_binding=require，psycopg2 不认，去掉
-    if "channel_binding" in DATABASE_URL:
-        DATABASE_URL = DATABASE_URL.split("?")[0] + "?sslmode=require"
-    SQLALCHEMY_DATABASE_URL = DATABASE_URL
+    # ★ 不要手动改连接串，sslmode 由 Neon 自己带
+    # ★ Vercel serverless 用 NullPool，避免连接池失效
     engine = create_engine(
-        SQLALCHEMY_DATABASE_URL,
+        DATABASE_URL,
+        poolclass=NullPool,
         pool_pre_ping=True,
-        pool_recycle=300,
         echo=False,
     )
 else:
