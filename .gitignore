@@ -25,3 +25,4 @@ uploads/
 # 系统
 .DS_Store
 Thumbs.db.neon
+test_s3.py
