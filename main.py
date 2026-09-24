@@ -75,34 +75,18 @@ app = FastAPI(title="我的博客后端", lifespan=lifespan)
 
 
 # ============================================================
-# ★ 调试：打印每个请求的真实路径
+# ★ 调试：打印请求路径和 Vercel 相关 header
+#   只打印，不改 path
 # ============================================================
 @app.middleware("http")
-async def debug_path(request: Request, call_next):
+async def debug_request(request: Request, call_next):
     print(
         f"[debug] path={request.url.path} "
-        f"raw_path={request.scope.get('raw_path')} "
-        f"root_path={request.scope.get('root_path')!r} "
-        f"query={request.url.query}"
+        f"| x-vercel-original-path={request.headers.get('x-vercel-original-path')!r} "
+        f"| x-forwarded-uri={request.headers.get('x-forwarded-uri')!r} "
+        f"| x-original-url={request.headers.get('x-original-url')!r} "
+        f"| x-rewrite-url={request.headers.get('x-rewrite-url')!r}"
     )
-    return await call_next(request)
-
-
-# ============================================================
-# ★ Vercel 原始路径恢复
-# ============================================================
-@app.middleware("http")
-async def fix_vercel_path(request: Request, call_next):
-    original = (
-        request.headers.get("x-vercel-original-path")
-        or request.headers.get("x-forwarded-uri")
-        or request.headers.get("x-original-url")
-        or request.headers.get("x-rewrite-url")
-    )
-    if original:
-        path = original.split("?")[0]
-        request.scope["path"] = path
-        print(f"[fix] {request.url.path} -> {path}")
     return await call_next(request)
 
 
@@ -110,15 +94,16 @@ PROTECTED_PREFIXES = ("/js/", "/css/")
 
 
 @app.middleware("http")
-async def fix_vercel_path(request: Request, call_next):
-    original = (
-        request.headers.get("x-vercel-original-path")
-        or request.headers.get("x-forwarded-uri")
-        or request.headers.get("x-original-url")
-        or request.headers.get("x-rewrite-url")
-    )
-    print(f"[fix] path={request.url.path} original={original}")
-    # ★ 先不改，只看日志
+async def referer_guard(request: Request, call_next):
+    path = request.url.path
+    if any(path.startswith(p) for p in PROTECTED_PREFIXES):
+        referer = request.headers.get("referer")
+        host = request.headers.get("host", "")
+        if referer:
+            from urllib.parse import urlparse
+            ref_host = urlparse(referer).netloc
+            if ref_host and ref_host != host:
+                return JSONResponse(status_code=403, content={"detail": "Forbidden"})
     return await call_next(request)
 
 
