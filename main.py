@@ -57,11 +57,13 @@ async def lifespan(app: FastAPI):
     # ★ 建表 + 初始化管理员，放在这里，避免 import 时就炸
     try:
         Base.metadata.create_all(bind=engine)
+        print("[init] create_all 完成")
     except Exception as e:
         print(f"[init] create_all 失败：{e}")
 
     try:
         init_admin()
+        print("[init] init_admin 完成")
     except Exception as e:
         print(f"[init] init_admin 失败：{e}")
 
@@ -72,6 +74,34 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="我的博客后端", lifespan=lifespan)
+
+
+# ============================================================
+# ★ 调试：打印每个请求的真实路径
+# ============================================================
+@app.middleware("http")
+async def debug_path(request: Request, call_next):
+    print(
+        f"[debug] path={request.url.path} "
+        f"raw_path={request.scope.get('raw_path')} "
+        f"root_path={request.scope.get('root_path')!r} "
+        f"query={request.url.query}"
+    )
+    return await call_next(request)
+
+
+# ============================================================
+# ★ 去掉 Vercel 带来的 /api/index 前缀
+#   如果 Vercel 把请求改写成 /api/index/xxx，这里还原成 /xxx
+# ============================================================
+@app.middleware("http")
+async def strip_vercel_prefix(request: Request, call_next):
+    path = request.url.path
+    if path.startswith("/api/index"):
+        new_path = path[len("/api/index"):] or "/"
+        request.scope["path"] = new_path
+        print(f"[strip] {path} -> {new_path}")
+    return await call_next(request)
 
 
 PROTECTED_PREFIXES = ("/js/", "/css/")
@@ -96,6 +126,7 @@ for _name in ("css", "js"):
     _dir = os.path.join(BASE_DIR, _name)
     if os.path.isdir(_dir):
         app.mount(f"/{_name}", StaticFiles(directory=_dir), name=_name)
+        print(f"[mount] 已挂载 /{_name} -> {_dir}")
     else:
         print(f"[mount] 跳过 /{_name}，目录不存在：{_dir}")
 
@@ -105,6 +136,7 @@ if not ON_VERCEL:
         from app.files.uploads import UPLOAD_DIR
         os.makedirs(UPLOAD_DIR, exist_ok=True)
         app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+        print(f"[mount] 已挂载 /uploads -> {UPLOAD_DIR}")
     except Exception as e:
         print(f"[mount] 跳过 /uploads：{e}")
 
