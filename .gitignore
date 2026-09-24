@@ -1,28 +1,24 @@
+# 敏感
+.neon
+.env
+*.env.local
+
+# 测试脚本
+test_s3.py
+backup_db.py
+check_attachments.py
+x.py
+
+# 本地数据库
+*.db
+backups/
+
 # Python
 __pycache__/
-*.py[cod]
-*.egg-info/
+*.pyc
 .venv/
 venv/
 
-# 数据库 / 备份
-blog.db
-backups/
-.watcher.pid
-
-# 上传的文件（本地）
-uploads/
-
-# Vercel / 环境变量
-.env
-.env.local
-.vercel
-
-# IDE
-.vscode/
-.idea/
-
 # 系统
 .DS_Store
-Thumbs.db.neon
-test_s3.py
+Thumbs.db
