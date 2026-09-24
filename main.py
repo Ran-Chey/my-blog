@@ -54,7 +54,6 @@ def _watch_posts():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # ★ 建表 + 初始化管理员，放在这里，避免 import 时就炸
     try:
         Base.metadata.create_all(bind=engine)
         print("[init] create_all 完成")
@@ -67,7 +66,6 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"[init] init_admin 失败：{e}")
 
-    # ★ Vercel 上不启动 watcher
     if not ON_VERCEL and os.environ.get("BLOG_WATCH", "1") == "1":
         threading.Thread(target=_watch_posts, daemon=True).start()
     yield
@@ -91,16 +89,20 @@ async def debug_path(request: Request, call_next):
 
 
 # ============================================================
-# ★ 去掉 Vercel 带来的 /api/index 前缀
-#   如果 Vercel 把请求改写成 /api/index/xxx，这里还原成 /xxx
+# ★ Vercel 原始路径恢复
 # ============================================================
 @app.middleware("http")
-async def strip_vercel_prefix(request: Request, call_next):
-    path = request.url.path
-    if path.startswith("/api/index"):
-        new_path = path[len("/api/index"):] or "/"
-        request.scope["path"] = new_path
-        print(f"[strip] {path} -> {new_path}")
+async def fix_vercel_path(request: Request, call_next):
+    original = (
+        request.headers.get("x-vercel-original-path")
+        or request.headers.get("x-forwarded-uri")
+        or request.headers.get("x-original-url")
+        or request.headers.get("x-rewrite-url")
+    )
+    if original:
+        path = original.split("?")[0]
+        request.scope["path"] = path
+        print(f"[fix] {request.url.path} -> {path}")
     return await call_next(request)
 
 
@@ -121,7 +123,7 @@ async def referer_guard(request: Request, call_next):
     return await call_next(request)
 
 
-# ★ 静态资源挂载：目录不存在就跳过，避免 StaticFiles 直接抛异常
+# ★ 静态资源挂载
 for _name in ("css", "js"):
     _dir = os.path.join(BASE_DIR, _name)
     if os.path.isdir(_dir):
@@ -130,7 +132,6 @@ for _name in ("css", "js"):
     else:
         print(f"[mount] 跳过 /{_name}，目录不存在：{_dir}")
 
-# ★ 本地才挂 /uploads（R2 / 无附件模式不需要）
 if not ON_VERCEL:
     try:
         from app.files.uploads import UPLOAD_DIR

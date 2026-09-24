@@ -1,17 +1,27 @@
+# 编辑器
+.vscode/
+
+# 上传目录
+uploads/
+
+# 备份
+backups/
+templates_backup/
+
 # 敏感
 .neon
 .env
 *.env.local
-
-# 测试脚本
 test_s3.py
-backup_db.py
-check_attachments.py
+
+# 本地一次性脚本
 x.py
+check_attachments.py
+backup_db.py
+数据库迁移.md
 
 # 本地数据库
 *.db
-backups/
 
 # Python
 __pycache__/
