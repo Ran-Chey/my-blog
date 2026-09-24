@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>审核文章 - 我的博客</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css">
+    <link rel="stylesheet" href="/css/core/theme.css">
+    <link rel="stylesheet" href="/css/core/base.css">
+    <link rel="stylesheet" href="/css/ui/markdown.css">
+    <link rel="stylesheet" href="/css/pages/admin-review.css">
+
+    <script src="/js/core/config.js"></script>
+    <script src="/js/ui/theme.js"></script>
+    <script src="/js/ui/theme-anim.js"></script>
+    <script src="/js/ui/theme-toggle.js"></script>
+    <script src="/js/core/auth.js"></script>
+    <script src="/js/core/api.js"></script>
+    <script src="/js/core/utils.js"></script>
+    <script src="/js/core/dom.js"></script>
+</head>
+
+<body>
+
+    <theme-toggle></theme-toggle>
+
+    <div class="review-page">
+        <a href="/admin" class="back-link">← 返回管理后台</a>
+
+        <div id="reviewContent">
+            <div class="loading">加载中...</div>
+        </div>
+    </div>
+
+    <script src="/js/core/utils.js"></script>
+    <script src="/js/core/dom.js"></script>
+    <script src="/js/ui/markdown.js"></script>
+    <script src="/js/pages/admin-review.js"></script>
+</body>
+
+</html>

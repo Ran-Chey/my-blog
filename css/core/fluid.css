@@ -1,0 +1,27 @@
+/* ============================================================
+   流体背景样式
+   ============================================================ */
+
+.fluid-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* 左侧渐隐遮罩：让流体在左侧淡出，文字落在干净底色上 */
+.fluid-mask {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right,
+            var(--bg) 0%,
+            var(--bg) 24%,
+            color-mix(in srgb, var(--bg) 75%, transparent) 46%,
+            transparent 76%);
+    z-index: 1;
+    pointer-events: none;
+    transition: background var(--theme-transition);
+}

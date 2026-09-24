@@ -1,0 +1,284 @@
+/* ============================================================
+   管理后台专属样式
+   ============================================================ */
+
+/* navbar 主体样式来自 navbar.css，这里只覆盖 admin 专属的链接/按钮 */
+
+.navbar-links .who {
+    color: var(--fg-dim);
+    font-size: 14px;
+}
+
+.navbar-links .nav-outside-link {
+    color: var(--fg-dim);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s;
+}
+
+.navbar-links .nav-outside-link:hover {
+    color: var(--fg);
+}
+
+.navbar-links .logout-btn {
+    background: transparent;
+    border: 1px solid var(--input-border);
+    color: var(--fg-dim);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.navbar-links .logout-btn:hover {
+    background: var(--input-bg);
+    color: var(--fg);
+}
+
+
+/* ============================================================
+   以下为 admin 专属内容样式
+   ============================================================ */
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 20px;
+}
+
+.login-card {
+    max-width: 380px;
+    margin: 80px auto;
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 36px;
+    box-shadow: var(--card-shadow);
+}
+
+.login-card h2 {
+    font-size: 20px;
+    margin-bottom: 24px;
+    text-align: center;
+    color: var(--fg);
+}
+
+.login-card label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--fg-dim);
+}
+
+.login-card input {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 18px;
+    outline: none;
+    background: var(--input-bg);
+    color: var(--fg);
+    font-family: inherit;
+}
+
+.login-card input:focus {
+    border-color: var(--accent);
+}
+
+.login-card .btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.login-card .btn:hover {
+    opacity: 0.9;
+}
+
+.login-card .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.msg {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    display: none;
+}
+
+.msg.error {
+    display: block;
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.msg.success {
+    display: block;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--fg);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-title.published-title {
+    margin-top: 40px;
+}
+
+.badge {
+    background: #fbbf24;
+    color: #78350f;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.badge.green {
+    background: #10b981;
+    color: #fff;
+}
+
+.post-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.2s;
+}
+
+.post-card:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.post-card .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--fg-faint);
+    margin-bottom: 10px;
+}
+
+.post-card h3 {
+    font-size: 17px;
+    margin-bottom: 8px;
+    color: var(--fg);
+}
+
+.post-card .preview {
+    color: var(--fg-dim);
+    font-size: 14px;
+    line-height: 1.6;
+    max-height: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+    margin-bottom: 16px;
+}
+
+.post-card .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-approve {
+    background: #10b981;
+    color: #fff;
+    border: none;
+    padding: 9px 22px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: inherit;
+}
+
+.btn-approve:hover {
+    opacity: 0.9;
+}
+
+.btn-detail {
+    background: var(--input-bg);
+    color: var(--fg-dim);
+    border: 1px solid var(--input-border);
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-detail:hover {
+    background: var(--bg-elev);
+}
+
+.btn-danger {
+    background: transparent;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-danger:hover {
+    background: #fef2f2;
+}
+
+.btn-edit {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+}
+
+.btn-edit:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+.empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--fg-faint);
+    font-size: 15px;
+    background: var(--card-bg);
+    border-radius: 10px;
+}
+
+.hidden {
+    display: none !important;
+}

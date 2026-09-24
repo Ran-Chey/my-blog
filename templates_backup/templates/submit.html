@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投稿 - 我的博客</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css">
+    <link rel="stylesheet" href="/css/core/theme.css">
+    <link rel="stylesheet" href="/css/core/base.css">
+    <link rel="stylesheet" href="/css/ui/markdown.css">
+    <link rel="stylesheet" href="/css/ui/navbar.css">
+    <link rel="stylesheet" href="/css/editor/editor.css">
+    <link rel="stylesheet" href="/css/pages/submit.css">
+</head>
+
+<body>
+
+    <theme-toggle></theme-toggle>
+
+    <div id="siteNavbar"></div>
+
+    <div class="container">
+        <div class="editor-card">
+            <form id="postForm">
+                <div class="editor-topbar">
+
+                    <div class="kind-switch" id="kindSwitch">
+                        <button type="button" data-kind="post" class="active">文稿</button>
+                        <button type="button" data-kind="note">手记</button>
+                        <input type="hidden" id="kind" name="kind" value="post">
+                    </div>
+
+                    <div class="field field-title">
+                        <input type="text" id="title" name="title" placeholder=" " required>
+                        <label for="title">标题</label>
+                    </div>
+
+                    <div class="field field-author">
+                        <input type="text" id="author_name" name="author_name" placeholder=" " required>
+                        <label for="author_name">作者</label>
+                    </div>
+
+                    <div class="field field-category">
+                        <input type="text" id="category" name="category" placeholder=" ">
+                        <label for="category">分类</label>
+                    </div>
+
+                    <div class="field field-tags">
+                        <input type="text" id="tags" name="tags" placeholder=" ">
+                        <label for="tags">标签（逗号分隔）</label>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submitBtn">提交投稿</button>
+                </div>
+
+                <div class="editor-wrapper">
+                    <div class="editor-pane">
+                        <div class="toolbar" id="toolbar">
+                            <button type="button" data-action="h1">H1</button>
+                            <button type="button" data-action="h2">H2</button>
+                            <button type="button" data-action="h3">H3</button>
+                            <button type="button" data-action="bold"><b>B</b></button>
+                            <button type="button" data-action="italic"><i>I</i></button>
+                            <button type="button" data-action="strike"><s>S</s></button>
+                            <button type="button" data-action="ul">•</button>
+                            <button type="button" data-action="ol">1.</button>
+                            <button type="button" data-action="quote">❝</button>
+                            <button type="button" data-action="code">&lt;/&gt;</button>
+                            <button type="button" data-action="codeblock">{ }</button>
+                            <button type="button" data-action="link">🔗</button>
+                            <button type="button" data-action="image" title="插入图片">📷</button>
+                        </div>
+                        <textarea id="content" name="content" placeholder="在这里用 Markdown 写正文……"></textarea>
+                    </div>
+                    <div class="preview-pane markdown-body" id="preview">
+                        <div class="placeholder">预览会显示在这里</div>
+                    </div>
+                </div>
+
+                <div class="attachment-area">
+                    <label class="attachment-label">附件（可多选，可拖拽上传）</label>
+
+                    <div class="drop-zone" id="dropZone">
+                        <div class="drop-zone-text">
+                            <div class="drop-zone-icon">📎</div>
+                            <div>把文件拖到这里上传</div>
+                            <div class="drop-zone-hint">或点击此处选择文件（支持多选）</div>
+                        </div>
+                    </div>
+
+                    <input type="file" id="attachmentInput" accept=".pdf,.png,.jpg,.jpeg,.gif,.webp,.txt,.md" multiple
+                        style="display: none;">
+
+                    <ul class="attach-list" id="attachList"></ul>
+                </div>
+            </form>
+
+            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+
+            <div id="editorMessage" class="editor-message"></div>
+        </div>
+    </div>
+
+    <script src="/js/ui/theme-toggle.js"></script>
+    <script src="/js/ui/theme.js"></script>
+    <script src="/js/ui/theme-anim.js"></script>
+    <script src="/js/core/utils.js"></script>
+    <script src="/js/core/dom.js"></script>
+    <script src="/js/ui/markdown.js"></script>
+    <script src="/js/editor/editor.js"></script>
+    <script src="/js/pages/submit.js"></script>
+    <script src="/js/ui/navbar.js"></script>
+</body>
+
+</html>

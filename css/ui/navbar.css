@@ -1,0 +1,58 @@
+/* ============================================================
+   全站通用：顶部导航条
+   ============================================================ */
+
+.navbar {
+    background: var(--bg-elev);
+    border-bottom: 1px solid var(--line);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.navbar-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--fg);
+    text-decoration: none;
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    /* ★ 统一给右侧 theme-toggle 让位 */
+    padding-right: 120px;
+}
+
+.navbar-links a {
+    color: var(--fg-dim);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.navbar-links a:hover {
+    color: var(--fg);
+}
+
+.navbar-links a.active {
+    color: var(--accent);
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 16px;
+    }
+
+    .navbar-links {
+        gap: 14px;
+        padding-right: 100px;
+    }
+}

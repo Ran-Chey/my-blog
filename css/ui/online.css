@@ -1,0 +1,43 @@
+/* ============================================================
+   在线人数状态
+   ============================================================ */
+
+.online-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--fg-dim);
+    letter-spacing: 0.5px;
+}
+
+.online-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+    animation: online-pulse 2s ease-in-out infinite;
+}
+
+@keyframes online-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+#onlineCount {
+    font-weight: 600;
+    color: var(--fg);
+}

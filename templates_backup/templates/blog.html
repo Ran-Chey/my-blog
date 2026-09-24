@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ran's Blog</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lobster&display=swap">
+
+    <link rel="stylesheet" href="/css/core/theme.css">
+    <link rel="stylesheet" href="/css/core/base.css">
+    <link rel="stylesheet" href="/css/ui/markdown.css">
+    <link rel="stylesheet" href="/css/ui/sidebar.css">
+    <link rel="stylesheet" href="/css/core/fluid.css">
+    <link rel="stylesheet" href="/css/pages/blog.css">
+    <link rel="stylesheet" href="/css/ui/filter.css">
+    <link rel="stylesheet" href="/css/ui/online.css">
+</head>
+
+<body>
+
+    <theme-toggle></theme-toggle>
+
+    <main class="main">
+        <canvas id="fluid" class="fluid-canvas"></canvas>
+        <div class="fluid-mask"></div>
+
+        <div class="content">
+            <div class="page-title">Writing</div>
+            <div id="filterBar" class="filter-bar"></div>
+            <div id="postList"></div>
+        </div>
+    </main>
+
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <div class="name">
+                <svg class="text-anim-svg" viewBox="0 0 240 70" xmlns="http://www.w3.org/2000/svg">
+                    <text class="text-anim" x="0" y="52">Randolph</text>
+                </svg>
+            </div>
+            <p class="tagline">
+                记录思考，<br>
+                分享写作。<br>
+                <em>保持克制。</em>
+            </p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="/">首页</a>
+            <a href="/posts">文稿</a>
+            <a href="/notes">手记</a>
+            <a href="/timeline">时间线</a>
+            <a href="/thinking">思考</a>
+            <a href="/friends">友链</a>
+            <a href="/submit">投稿</a>
+            <a href="/admin">管理</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="online-status">
+                <span class="online-dot"></span>
+                <span id="onlineCount">1</span> 人在读
+            </div>
+            © 2026<br>
+            All rights reserved.
+        </div>
+    </aside>
+
+    <script src="/js/ui/theme-toggle.js"></script>
+    <script src="/js/ui/theme.js"></script>
+    <script src="/js/ui/theme-anim.js"></script>
+    <script src="/js/core/utils.js"></script>
+    <script src="/js/pages/blog.js"></script>
+    <script src="/js/core/fluid.js"></script>
+    <script src="/js/ui/online.js"></script>
+
+    <!-- ★ 侧边栏 active 高亮 -->
+    <script>
+        (function () {
+            const path = window.location.pathname;
+            document.querySelectorAll(".sidebar-nav a").forEach(a => {
+                const href = a.getAttribute("href");
+                if (href === path) a.classList.add("active");
+            });
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+/* 文件：css/ui/markdown.css */
+
+/* ============================================================
+   代码块（行号 + 复制按钮）
+   ============================================================ */
+.markdown-body pre {
+    position: relative;
+    margin: 20px 0 24px;
+    border-radius: 10px;
+    /* ★ 用变量，暗色主题自动适配 */
+    background: var(--pre-bg, #F6F8FA);
+    border: 1px solid var(--line, #E5E7EB);
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+    font-size: 13.5px;
+    line-height: 1.7;
+}
+
+.markdown-body pre .code-line-numbers {
+    flex: 0 0 auto;
+    padding: 16px 4px 16px 20px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.7;
+    /* ★ 行号颜色也用变量 */
+    color: var(--fg-faint, #94a3b8);
+    text-align: right;
+    user-select: none;
+    white-space: pre;
+    background: transparent;
+    border-right: none;
+}
+
+.markdown-body pre code.hljs,
+.markdown-body pre code:not(.hljs) {
+    flex: 1 1 auto;
+    display: block;
+    padding: 16px 20px 16px 16px;
+    background: transparent;
+    /* ★ 代码文字颜色 */
+    color: var(--pre-fg, #1f2328);
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.7;
+    white-space: pre;
+    overflow-x: auto;
+}
+
+.markdown-body pre .code-copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-family: var(--sans);
+    line-height: 1.4;
+    color: var(--fg-dim, #57606a);
+    background: var(--bg-elev, rgba(255, 255, 255, 0.9));
+    border: 1px solid var(--line, rgba(31, 35, 40, 0.12));
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.markdown-body pre:hover .code-copy-btn {
+    opacity: 1;
+}
+
+.markdown-body pre .code-copy-btn:hover {
+    background: var(--bg-elev, #ffffff);
+    color: var(--fg, #1f2328);
+    border-color: var(--fg-faint, rgba(31, 35, 40, 0.25));
+}
+
+@media (hover: none) {
+    .markdown-body pre .code-copy-btn {
+        opacity: 1;
+    }
+}
+
+.markdown-body pre .code-copy-btn.copied {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.5);
+    color: #047857;
+}

@@ -1,0 +1,158 @@
+/* ============================================================
+   右侧栏样式
+   ============================================================ */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: var(--sidebar-w);
+    height: 100vh;
+    padding: 56px 48px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-left: 1px solid var(--line);
+    background: var(--bg-elev);
+    z-index: 10;
+}
+
+.sidebar-top .name {
+    margin-bottom: 24px;
+}
+
+.text-anim-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+}
+
+.text-anim {
+    font-family: 'Lobster', cursive;
+    font-size: 56px;
+    fill: transparent;
+    stroke: var(--fg);
+    stroke-width: 1.5px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-dasharray: 3000;
+    stroke-dashoffset: 3000;
+    animation: drawText 8s ease-in-out infinite;
+}
+
+@keyframes drawText {
+    0% {
+        stroke-dashoffset: 3000;
+        fill: transparent;
+    }
+
+    30% {
+        stroke-dashoffset: 0;
+        fill: transparent;
+    }
+
+    40% {
+        fill: var(--fg);
+    }
+
+    100% {
+        stroke-dashoffset: 3000;
+        fill: transparent;
+    }
+}
+
+.sidebar-top .tagline {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--fg-dim);
+    line-height: 1.9;
+    max-width: 240px;
+}
+
+.sidebar-top .tagline em {
+    font-style: italic;
+    color: var(--fg);
+}
+
+/* ---------- 导航：改为两列，容纳更多入口 ---------- */
+.sidebar-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+    margin: 40px 0;
+}
+
+.sidebar-nav a {
+    font-family: var(--sans);
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    transition: color 0.2s;
+    width: fit-content;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    color: var(--fg);
+}
+
+.sidebar-nav a.active::before {
+    content: "— ";
+    color: var(--fg-faint);
+}
+
+.sidebar-bottom {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--fg-faint);
+    line-height: 1.9;
+    letter-spacing: 0.5px;
+}
+
+/* 响应式：窄屏变成横向滚动 */
+@media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 28px 24px;
+        border-left: none;
+        border-bottom: 1px solid var(--line);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .sidebar-top .name {
+        width: 140px;
+        margin-bottom: 0;
+    }
+
+    .sidebar-top .tagline {
+        display: none;
+    }
+
+    /* 移动端导航：一行一个，多行 wrap */
+    .sidebar-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        margin: 0;
+        width: 100%;
+    }
+
+    .sidebar-nav a {
+        font-size: 11px;
+        letter-spacing: 1px;
+    }
+
+    .sidebar-nav a.active::before {
+        content: "";
+    }
+
+    .sidebar-bottom {
+        display: none;
+    }
+}

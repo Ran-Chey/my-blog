@@ -1,0 +1,481 @@
+/* ============================================================
+   编辑器组件（投稿页 / 编辑页 共用）
+   —— 顶栏、编辑器、预览、附件
+   ============================================================ */
+
+/* ---------- 卡片外壳（如果外面没包，也自带） ---------- */
+.editor-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+    padding: 16px 20px;
+}
+
+/* ============================================================
+   顶部工具条
+   ============================================================ */
+.editor-topbar {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+}
+
+/* ---------- 浮动标签输入框 ---------- */
+.field {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.field input {
+    width: 100%;
+    padding: 18px 12px 6px;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    background: var(--input-bg);
+    color: var(--fg);
+    line-height: 1.4;
+}
+
+.field input:focus {
+    border-color: var(--accent);
+    background: var(--bg-elev);
+}
+
+.field label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--fg-faint);
+    font-size: 13px;
+    pointer-events: none;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 24px);
+}
+
+.field input:focus+label,
+.field input:not(:placeholder-shown)+label {
+    top: 8px;
+    transform: none;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+}
+
+.field-title {
+    flex: 2 1 200px;
+}
+
+.field-author {
+    flex: 1 1 120px;
+}
+
+.field-category {
+    flex: 1 1 120px;
+}
+
+.field-tags {
+    flex: 2 1 180px;
+}
+
+/* ---------- 类型切换（投稿页用；编辑页可以不放） ---------- */
+.kind-switch {
+    display: inline-flex;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    height: 42px;
+    background: var(--input-bg);
+}
+
+.kind-switch button {
+    padding: 0 16px;
+    background: transparent;
+    border: none;
+    color: var(--fg-dim);
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    height: 100%;
+}
+
+.kind-switch button+button {
+    border-left: 1px solid var(--input-border);
+}
+
+.kind-switch button:hover {
+    color: var(--fg);
+    background: var(--bg-elev);
+}
+
+.kind-switch button.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* ---------- 置顶（编辑页用） ---------- */
+.pinned-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--fg-dim);
+    font-family: var(--sans);
+    cursor: pointer;
+    padding: 10px 12px;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    background: var(--input-bg);
+    white-space: nowrap;
+    height: 42px;
+    box-sizing: border-box;
+}
+
+/* ---------- 提交按钮 ---------- */
+.editor-topbar .btn-submit {
+    flex-shrink: 0;
+    padding: 0 20px;
+    height: 42px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editor-topbar .btn-submit:hover {
+    opacity: 0.85;
+}
+
+.editor-topbar .btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.editor-topbar .btn-cancel {
+    flex-shrink: 0;
+    padding: 0 20px;
+    height: 42px;
+    background: var(--input-bg);
+    color: var(--fg-dim);
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editor-topbar .btn-cancel:hover {
+    background: var(--bg-elev);
+}
+
+/* ============================================================
+   编辑器 + 预览（两列等高）
+   ============================================================ */
+.editor-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    /* ★ 两列等高 */
+    height: calc(100vh - 340px);
+    min-height: 400px;
+}
+
+.editor-pane {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.preview-pane {
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    padding: 20px 24px;
+    height: 100%;
+    min-height: 0;
+    background: var(--bg-elev);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    color: var(--fg);
+    box-sizing: border-box;
+}
+
+.preview-pane .placeholder {
+    color: var(--fg-faint);
+    font-size: 13px;
+    text-align: center;
+    margin: auto;
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    padding: 6px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    flex-shrink: 0;
+}
+
+.toolbar button {
+    background: var(--bg-elev);
+    border: 1px solid var(--input-border);
+    color: var(--fg-dim);
+    width: 32px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    font-family: inherit;
+}
+
+.toolbar button:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+.toolbar button:active {
+    transform: scale(0.95);
+}
+
+.editor-pane textarea {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--input-border);
+    border-radius: 0 0 6px 6px;
+    font-size: 14px;
+    font-family: var(--mono);
+    line-height: 1.7;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+    background: var(--bg-elev);
+    color: var(--fg);
+    box-sizing: border-box;
+}
+
+.editor-pane textarea:focus {
+    border-color: var(--accent);
+}
+
+/* ============================================================
+   附件区
+   ============================================================ */
+.attachment-area {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.attachment-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fg-dim);
+    margin-bottom: 8px;
+}
+
+.drop-zone {
+    border: 2px dashed var(--input-border);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+    color: var(--fg-faint);
+    font-size: 13px;
+    transition: all 0.2s;
+    cursor: pointer;
+    margin-bottom: 12px;
+    background: var(--input-bg);
+}
+
+.drop-zone:hover {
+    border-color: var(--accent);
+    color: var(--fg);
+}
+
+.drop-zone.dragover {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+    color: var(--accent);
+    transform: scale(1.01);
+}
+
+.drop-zone.uploading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.drop-zone-icon {
+    font-size: 24px;
+    margin-bottom: 6px;
+}
+
+.drop-zone-hint {
+    font-size: 11px;
+    color: var(--fg-faint);
+    margin-top: 4px;
+}
+
+.attach-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.attach-list .attach-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.attach-list .attach-icon {
+    flex-shrink: 0;
+}
+
+.attach-list .attach-name {
+    flex: 1;
+    color: var(--accent);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.attach-list .attach-open {
+    color: var(--fg-dim);
+    text-decoration: none;
+    font-size: 12px;
+    padding: 2px 8px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+}
+
+.attach-list .attach-open:hover {
+    color: var(--fg);
+    border-color: var(--fg-faint);
+}
+
+.attach-list .attach-remove {
+    padding: 2px 8px;
+    background: transparent;
+    border: 1px solid var(--accent-border);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--accent);
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.attach-list .attach-remove:hover {
+    background: var(--accent-bg);
+}
+
+/* ============================================================
+   消息
+   ============================================================ */
+.editor-message {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    display: none;
+}
+
+.editor-message.success {
+    display: block;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.editor-message.error {
+    display: block;
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* ============================================================
+   响应式
+   ============================================================ */
+@media (max-width: 768px) {
+    .editor-topbar {
+        align-items: stretch;
+    }
+
+    .field-title,
+    .field-author,
+    .field-category,
+    .field-tags {
+        flex: 1 1 100%;
+    }
+
+    .kind-switch {
+        width: 100%;
+    }
+
+    .kind-switch button {
+        flex: 1;
+    }
+
+    .editor-topbar .btn-submit,
+    .editor-topbar .btn-cancel {
+        width: 100%;
+    }
+
+    .editor-wrapper {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .editor-pane,
+    .preview-pane {
+        height: 400px;
+    }
+}

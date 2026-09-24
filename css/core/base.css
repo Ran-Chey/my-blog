@@ -1,0 +1,69 @@
+/* ============================================================
+   全站基础样式
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --serif: "Source Serif Pro", "Noto Serif SC", Georgia, "Times New Roman", serif;
+    --sans: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    --mono: "Consolas", "Monaco", monospace;
+
+    --sidebar-w: 340px;
+    --theme-transition: 0.45s ease;
+}
+
+html {
+    background-color: var(--bg);
+    color: var(--fg);
+}
+
+body {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+
+    background-color: var(--bg);
+    color: var(--fg);
+    min-height: 100vh;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.link {
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.link:hover {
+    opacity: 0.75;
+}
+
+/* ---------- 主题切换 overlay 通用 ---------- */
+.ta-flash-overlay,
+.ta-ink-overlay {
+    /* 在 theme-anim.js 里会详细定义 */
+    will-change: transform, opacity;
+}

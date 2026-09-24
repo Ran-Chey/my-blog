@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>友链 - 我的博客</title>
+
+    <link rel="stylesheet" href="/css/core/theme.css">
+    <link rel="stylesheet" href="/css/core/base.css">
+    <link rel="stylesheet" href="/css/ui/navbar.css">
+    <link rel="stylesheet" href="/css/pages/friends.css">
+</head>
+
+<body>
+
+    <theme-toggle></theme-toggle>
+
+    <div id="siteNavbar"></div>
+
+    <main class="page">
+        <h1 class="page-title">友情链接</h1>
+        <p class="page-sub">在这里交换链接，互相发现。</p>
+
+        <div class="link-grid" id="linkGrid">
+            <div class="empty">加载中...</div>
+        </div>
+
+        <div class="apply-card">
+            <h2>申请友链</h2>
+            <p class="hint">提交后需管理员审核，通过后显示在上方。</p>
+            <form id="applyForm">
+                <div class="form-row">
+                    <label for="name">站点名 *</label>
+                    <input type="text" id="name" placeholder="例如：某某的博客" required>
+                </div>
+                <div class="form-row">
+                    <label for="url">链接 *</label>
+                    <input type="url" id="url" placeholder="https://example.com" required>
+                </div>
+                <div class="form-row">
+                    <label for="description">描述</label>
+                    <input type="text" id="description" placeholder="一句话介绍（可选）">
+                </div>
+                <div class="form-row">
+                    <label for="avatar">头像 URL</label>
+                    <input type="url" id="avatar" placeholder="https://example.com/avatar.png（可选）">
+                </div>
+                <button type="submit" class="btn-submit" id="applyBtn">提交申请</button>
+            </form>
+            <div class="message" id="msg"></div>
+        </div>
+    </main>
+
+    <script src="/js/ui/theme-toggle.js"></script>
+    <script src="/js/ui/theme.js"></script>
+    <script src="/js/ui/theme-anim.js"></script>
+    <script src="/js/core/utils.js"></script>
+    <script src="/js/core/dom.js"></script>
+    <script src="/js/pages/friends.js"></script>
+    <script src="/js/ui/navbar.js"></script>
+</body>
+
+</html>

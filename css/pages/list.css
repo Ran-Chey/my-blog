@@ -1,0 +1,248 @@
+/* ============================================================
+   文稿 / 手记 / 时间线 / 思考 共用列表样式
+   ============================================================ */
+
+.page-wrap {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 40px;
+}
+
+.page-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.page-head h1 {
+    font-family: var(--serif);
+    font-size: 28px;
+    color: var(--fg);
+}
+
+.view-switch {
+    display: flex;
+    gap: 8px;
+    font-family: var(--sans);
+    font-size: 13px;
+}
+
+.view-switch a {
+    color: var(--fg-dim);
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+}
+
+.view-switch a.active {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-bg);
+}
+
+/* ---------- 紧凑视图（默认） ---------- */
+.post-list .row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+    color: var(--fg);
+    text-decoration: none;
+}
+
+.post-list .row:hover {
+    color: var(--accent);
+}
+
+.post-list .row .date {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--fg-faint);
+    flex-shrink: 0;
+    width: 88px;
+}
+
+.post-list .row .title {
+    font-family: var(--serif);
+    font-size: 16px;
+    flex: 1;
+}
+
+.post-list .row .cat {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--fg-dim);
+    flex-shrink: 0;
+}
+
+/* ---------- 松散视图 ---------- */
+.post-list.loose .row {
+    display: block;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.post-list.loose .row .date {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.post-list.loose .row .title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.post-list.loose .row .excerpt {
+    margin-top: 8px;
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--fg-dim);
+    line-height: 1.8;
+    max-height: 4.8em;
+    overflow: hidden;
+}
+
+/* ---------- 时间线 ---------- */
+.timeline-month {
+    margin-bottom: 40px;
+}
+
+.timeline-month h2 {
+    font-family: var(--sans);
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--fg-faint);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.timeline-month ul {
+    list-style: none;
+    border-left: 1px solid var(--line);
+    padding-left: 20px;
+}
+
+.timeline-month li {
+    position: relative;
+    padding: 8px 0;
+}
+
+.timeline-month li::before {
+    content: "";
+    position: absolute;
+    left: -25px;
+    top: 16px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+.timeline-month li a {
+    color: var(--fg);
+    text-decoration: none;
+}
+
+.timeline-month li a:hover {
+    color: var(--accent);
+}
+
+.timeline-month .day {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--fg-faint);
+    margin-right: 10px;
+}
+
+/* ---------- 思考 ---------- */
+.think-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    box-shadow: var(--card-shadow);
+}
+
+.think-card .meta {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--fg-faint);
+    margin-bottom: 8px;
+}
+
+.think-card .content {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--fg);
+    white-space: pre-wrap;
+}
+
+.think-form {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 16px 20px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 24px;
+}
+
+.think-form textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px 12px;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    background: var(--input-bg);
+    color: var(--fg);
+    font-family: var(--serif);
+    font-size: 15px;
+    line-height: 1.7;
+    resize: vertical;
+    outline: none;
+}
+
+.think-form textarea:focus {
+    border-color: var(--accent);
+}
+
+.think-form .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.think-form input[type="text"] {
+    flex: 1;
+    padding: 7px 12px;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    background: var(--input-bg);
+    color: var(--fg);
+    font-size: 13px;
+    outline: none;
+}
+
+.think-form button {
+    padding: 8px 22px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .page-wrap {
+        padding: 0 16px;
+    }
+
+    .post-list .row .date {
+        width: 72px;
+    }
+}

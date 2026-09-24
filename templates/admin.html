@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理控制台 - 我的博客</title>
+
+    <link rel="stylesheet" href="/css/core/theme.css">
+    <link rel="stylesheet" href="/css/core/base.css">
+    <link rel="stylesheet" href="/css/ui/navbar.css">
+    <link rel="stylesheet" href="/css/pages/admin.css">
+    <script src="/js/core/config.js"></script>
+    <script src="/js/ui/theme.js"></script>
+    <script src="/js/ui/theme-anim.js"></script>
+    <script src="/js/ui/theme-toggle.js"></script>
+    <script src="/js/core/auth.js"></script>
+    <script src="/js/core/api.js"></script>
+    <script src="/js/core/utils.js"></script>
+    <script src="/js/core/dom.js"></script>
+</head>
+
+<body>
+
+    <theme-toggle></theme-toggle>
+
+    <div class="navbar">
+        <a href="/" class="navbar-logo">📝 管理控制台</a>
+        <div class="navbar-links">
+            <a href="/" class="nav-outside-link">← 返回前台</a>
+            <span class="who" id="whoText"></span>
+            <button class="logout-btn" id="logoutBtn">退出登录</button>
+        </div>
+    </div>
+
+    <div id="loginView">
+        <div class="login-card">
+            <h2>管理员登录</h2>
+            <label for="username">用户名</label>
+            <input type="text" id="username" placeholder="admin" autocomplete="username">
+            <label for="password">密码</label>
+            <input type="password" id="password" placeholder="请输入密码" autocomplete="current-password">
+            <button class="btn" id="loginBtn">登 录</button>
+            <div class="msg" id="loginMsg"></div>
+        </div>
+    </div>
+
+    <div id="adminView" class="hidden">
+        <div class="container">
+            <div class="section-title">
+                待审核文章
+                <span class="badge" id="pendingCount">0</span>
+            </div>
+            <div id="pendingList"></div>
+
+            <div class="section-title published-title">
+                已发布文章
+                <span class="badge green" id="publishedCount">0</span>
+            </div>
+            <div id="publishedList"></div>
+
+            <div class="section-title published-title">
+                待审核友链
+                <span class="badge" id="pendingFriendsCount">0</span>
+            </div>
+            <div id="pendingFriendsList"></div>
+
+            <div class="section-title published-title">
+                已通过友链
+                <span class="badge green" id="approvedFriendsCount">0</span>
+            </div>
+            <div id="approvedFriendsList"></div>
+        </div>
+    </div>
+<script src="/js/core/utils.js"></script>
+    <script src="/js/core/dom.js"></script>
+    <script src="/js/pages/admin.js"></script>
+</body>
+
+</html>

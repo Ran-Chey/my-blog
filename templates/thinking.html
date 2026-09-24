@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思考 - 我的博客</title>
+    <link rel="stylesheet" href="/css/core/theme.css">
+    <link rel="stylesheet" href="/css/core/base.css">
+    <link rel="stylesheet" href="/css/ui/navbar.css">
+    <link rel="stylesheet" href="/css/pages/list.css">
+    <script src="/js/core/config.js"></script>
+    <script src="/js/ui/theme.js"></script>
+    <script src="/js/ui/theme-anim.js"></script>
+    <script src="/js/ui/theme-toggle.js"></script>
+    <script src="/js/core/auth.js"></script>
+    <script src="/js/core/api.js"></script>
+    <script src="/js/core/utils.js"></script>
+    <script src="/js/core/dom.js"></script>
+</head>
+
+<body data-page="thinking">
+
+    <theme-toggle></theme-toggle>
+
+    <div id="siteNavbar"></div>
+
+    <main class="page-wrap">
+        <div class="page-head">
+            <h1>思考</h1>
+        </div>
+
+        <form class="think-form" id="thinkForm">
+            <textarea placeholder="此刻在想什么……" required></textarea>
+            <div class="row">
+                <input type="text" name="author_name" placeholder="署名（可留空）">
+                <button type="submit">发布</button>
+            </div>
+        </form>
+
+        <div id="thinkWrap">
+            <div class="empty">加载中...</div>
+        </div>
+    </main>
+<script src="/js/core/utils.js"></script>
+    <script src="/js/pages/list.js"></script>
+    <script src="/js/ui/navbar.js"></script>
+</body>
+
+</html>
