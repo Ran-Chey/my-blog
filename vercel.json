@@ -6,10 +6,13 @@
             "includeFiles": "{templates,css,js,posts}/**"
         }
     },
-    "rewrites": [
+    "routes": [
         {
-            "source": "/(.*)",
-            "destination": "/api/index"
+            "handle": "filesystem"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/api/index"
         }
     ]
 }
