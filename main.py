@@ -14,6 +14,8 @@ from app.security.auth import init_admin
 from app.api.routes import router
 
 ON_VERCEL = os.environ.get("VERCEL") == "1"
+ON_RAILWAY = os.environ.get("RAILWAY_ENVIRONMENT") is not None
+IS_LOCAL = not ON_VERCEL and not ON_RAILWAY
 
 
 def _watch_posts():
@@ -66,8 +68,13 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"[init] init_admin 失败：{e}")
 
-    if not ON_VERCEL and os.environ.get("BLOG_WATCH", "1") == "1":
+    # ★ 只在本地启动 watcher（Vercel / Railway 上不启动）
+    if IS_LOCAL and os.environ.get("BLOG_WATCH", "1") == "1":
         threading.Thread(target=_watch_posts, daemon=True).start()
+        print("[watch] 本地 watcher 已启动")
+    else:
+        print(f"[watch] 跳过 watcher（ON_VERCEL={ON_VERCEL}, ON_RAILWAY={ON_RAILWAY}）")
+
     yield
 
 
@@ -75,18 +82,11 @@ app = FastAPI(title="我的博客后端", lifespan=lifespan)
 
 
 # ============================================================
-# ★ 调试：打印请求路径和 Vercel 相关 header
-#   只打印，不改 path
+# ★ 调试：打印请求路径（只打印，不改 path）
 # ============================================================
 @app.middleware("http")
 async def debug_request(request: Request, call_next):
-    print(
-        f"[debug] path={request.url.path} "
-        f"| x-vercel-original-path={request.headers.get('x-vercel-original-path')!r} "
-        f"| x-forwarded-uri={request.headers.get('x-forwarded-uri')!r} "
-        f"| x-original-url={request.headers.get('x-original-url')!r} "
-        f"| x-rewrite-url={request.headers.get('x-rewrite-url')!r}"
-    )
+    print(f"[debug] path={request.url.path} query={request.url.query}")
     return await call_next(request)
 
 
@@ -116,7 +116,8 @@ for _name in ("css", "js"):
     else:
         print(f"[mount] 跳过 /{_name}，目录不存在：{_dir}")
 
-if not ON_VERCEL:
+# ★ 本地才挂 /uploads
+if IS_LOCAL:
     try:
         from app.files.uploads import UPLOAD_DIR
         os.makedirs(UPLOAD_DIR, exist_ok=True)
