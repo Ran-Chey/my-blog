@@ -110,16 +110,15 @@ PROTECTED_PREFIXES = ("/js/", "/css/")
 
 
 @app.middleware("http")
-async def referer_guard(request: Request, call_next):
-    path = request.url.path
-    if any(path.startswith(p) for p in PROTECTED_PREFIXES):
-        referer = request.headers.get("referer")
-        host = request.headers.get("host", "")
-        if referer:
-            from urllib.parse import urlparse
-            ref_host = urlparse(referer).netloc
-            if ref_host and ref_host != host:
-                return JSONResponse(status_code=403, content={"detail": "Forbidden"})
+async def fix_vercel_path(request: Request, call_next):
+    original = (
+        request.headers.get("x-vercel-original-path")
+        or request.headers.get("x-forwarded-uri")
+        or request.headers.get("x-original-url")
+        or request.headers.get("x-rewrite-url")
+    )
+    print(f"[fix] path={request.url.path} original={original}")
+    # ★ 先不改，只看日志
     return await call_next(request)
 
 
